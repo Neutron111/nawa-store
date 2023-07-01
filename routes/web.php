@@ -1,4 +1,6 @@
 <?php
+
+use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -13,10 +15,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function ()
-{
+Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/users',[UserController::class,'index']);
 
-Route::get('/users/{first}',[UserController::class,'show']);
+Route::resource('/Admin/Products', ProductController::class); ///to build all routs to specific controller
+
+Route::get('/users', [UserController::class, 'index']);
+
+Route::get('/users/{first}', [UserController::class, 'show']);
