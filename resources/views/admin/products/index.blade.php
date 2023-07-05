@@ -1,16 +1,4 @@
-<!doctype html>
-<html lang="en">
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Products</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-</head>
-
-<body>
-    <div class="container">
 @extends('layouts.admin')
         @section('content')
             <h2 class="mb-4 fs-3"><?= $title ?></h2>
@@ -33,6 +21,7 @@
                             <td>{{ $product->category_name }}</td>
                             <td>{{ $product->price }}</td>
                             <td>{{ $product->status }}</td>
+                            <td><a href="{{ route('Products.edit',$product->id) }}" class="btn btn-sm btn-outline-dark">Edit <i class="far fa-edit"></i></a></td>
                         </tr>
                     @endforeach
                 </tbody>

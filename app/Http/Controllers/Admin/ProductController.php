@@ -48,7 +48,7 @@ class ProductController extends Controller
 
         $products = Product::all();
         return view('admin.products.index', [
-            'title' => "Products list",
+            'title' => "Products list", // assositve array key,value
             'products' => $products,
         ]);
     }
@@ -73,7 +73,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $product = new Product();
+        $product = new Product();    /// object from model *** note we use model for model = table and import from database
         $product->name = $request->input('name');
         $product->slug = $request->input('slug');
         $product->description = $request->input('description');
@@ -106,7 +106,9 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        //
+        // $product= Product::where('id', '=',$id)->first(); //return Model
+        $product=Product::find($id); // same as before
+
     }
 
     /**
