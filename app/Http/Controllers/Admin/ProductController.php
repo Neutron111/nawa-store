@@ -1,11 +1,13 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
-
+use App\Http\Requests\ProductRequest;
 use App\Models\Product;
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use PhpParser\Node\Expr\Cast\String_;
 
 class ProductController extends Controller
 {
@@ -61,8 +63,13 @@ class ProductController extends Controller
     public function create()
     {
         $product = new Product();
-
-        return view('admin.products.create', compact('product'));
+        $categories = Category::all();
+        // return view('admin.products.create', compact('product', 'categories'));
+        return view('admin.products.create',[
+            'product'=>$product,
+            'categories'=>$categories,
+            'status_options' => Product::getstatusoptions(),
+        ]);
     }
 
     /**
@@ -71,20 +78,27 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProductRequest $request)
     {
-        $product = new Product();    /// object from model *** note we use model for model = table and import from database
-        $product->name = $request->input('name');
-        $product->slug = $request->input('slug');
-        $product->description = $request->input('description');
-        $product->short_description = $request->input('short_description');
-        $product->price = $request->input('price');
-        $product->compare_price = $request->input('compare_price');
-        $product->save();
+
+        $product = Product::create($request->all());
+// this is mass assignment instaed of all below >>>>
+
+       // $product = new Product();/// object from model *** note we use model for model = table and import from database
+        // $product->name = $request->input('name');
+        // $product->slug = $request->input('slug');
+        // $product->category_id = $request->input('category_id');
+        // $product->description = $request->input('description');
+        // $product->short_description = $request->input('short_description');
+        // $product->price = $request->input('price');
+        // $product->compare_price = $request->input('compare_price');
+        // $product->status = $request->input('status' ,'active'); /// the secened par for defualt value
+        //$product->save();
 
         //prg: post redirect get
-        return redirect()->route('Products.index'); //Get
-
+        return redirect()
+            ->route('Products.index') //Get
+            ->with('success', "Product ({$product->name}) Created"); //Add flash msg
     }
 
     /**
@@ -104,11 +118,25 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Product $Product)
     {
-        // $product= Product::where('id', '=',$id)->first(); //return Model
-        $product=Product::find($id); // same as before
 
+        //عرفنا في البارميتر البروداكت عشان نستغني عن الجملة الثانية بدون ما نقعد نبحث عن id لارفل لحالها موفرة هاي الخاصية بمجرد تمرير البورداكات
+       // $product = Product::findOrFail($id); يتم استدعاء هذا السطر عندما نعرف البارميتر
+
+
+        // $product= Product::where('id', '=',$id)->first(); first return just one element //return Model
+        // same as before
+        // if (!$product){
+        //     abort(404);
+        // } to make it secure from hacker if he tried some tricks number on domain parameter
+        // dd($Product);
+        $categories = Category::all();
+        return view('admin.products.edit', [
+            'product' => $Product,
+            'categories' => $categories,
+            'status_options'=>Product::getstatusoptions(),
+        ]);
     }
 
     /**
@@ -118,9 +146,31 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ProductRequest $request, Product $Product)
     {
-        //
+
+        // $ruls =$this->rules($id);
+        // $messages=$this->messages();
+        // $request->validate($ruls,$messages);
+
+        // $product = Product::findOrFail($id); //we dont need new product we need specfic id to update
+        $Product->update($request->all());
+
+
+        // $product->name = $request->input('name');
+        // $product->slug = $request->input('slug');
+        // $product->category_id = $request->input('category_id');
+        // $product->description = $request->input('description');
+        // $product->short_description = $request->input('short_description');
+        // $product->price = $request->input('price');
+        // $product->compare_price = $request->input('compare_price');
+        // $product->status = $request->input('status' ,'active');
+       // $product->save();
+
+        //prg: post redirect get
+        return redirect()
+            ->route('Products.index') //Get
+            ->with('success', "Product ({$Product->name}) Updated"); //Add flash msg
     }
 
     /**
@@ -129,8 +179,15 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Product $Product)
     {
-        //
+        // Product::where('id', '=', $id)->delete();  ///// first way to delete
+        // Product::destroy($id);                     /////seocend way
+      //  $product = Product::findOrFail($id);          ///// thired way
+        $Product->delete();
+
+        return redirect()
+            ->route('Products.index') //Get
+            ->with('success', "Product ({$Product->name}) Deleted"); //Add flash msg
     }
 }

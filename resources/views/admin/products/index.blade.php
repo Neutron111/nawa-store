@@ -3,6 +3,13 @@
         @section('content')
             <h2 class="mb-4 fs-3"><?= $title ?></h2>
             <a href="{{ route('Products.create') }}" class="btn btn-sm btn-primary mb-3">+ Create Product</a>
+
+            @if (session()->has('success'))
+            <div class="alert alert-success">
+                {{ session('success')}}
+            </div>
+            @endif
+
             <table class="table">
                 <thead>
                     <tr>
@@ -11,6 +18,8 @@
                         <th>Category</th>
                         <th>Price</th>
                         <th>Status</th>
+                        <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -22,6 +31,12 @@
                             <td>{{ $product->price }}</td>
                             <td>{{ $product->status }}</td>
                             <td><a href="{{ route('Products.edit',$product->id) }}" class="btn btn-sm btn-outline-dark">Edit <i class="far fa-edit"></i></a></td>
+                            <td><form action="{{ route('Products.destroy',$product->id) }}" method="POST">
+                                @csrf
+                                @method('delete')
+                            <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i> Delete</button>
+                                </form>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
