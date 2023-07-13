@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+use NumberFormatter;
 
 class Product extends Model
 {
@@ -25,5 +27,18 @@ class Product extends Model
             self::STATUS_DRAFT =>'Draft',
 
         ];
+    }
+
+        public function getImageUrlAttribute(){
+        if ($this->image)
+        {
+            return Storage::disk('public')->url($this->image);
+        }
+        return 'https://placehold.co/80x80';
+    }
+    public function getPriceFormattedAttribute()
+    {
+        $foramtter =new NumberFormatter('en',NumberFormatter::CURRENCY);
+        return $foramtter->formatCurrency($this->price,'EUR');
     }
 }

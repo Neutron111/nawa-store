@@ -24,7 +24,7 @@ class ProductRequest extends FormRequest
     public function rules()
     {
 
-        $product =$this->route('Product',0);     //تستعمل لما بدي استدعي اشي من برا بس انا هان في نفس الكلاس استعملت ذيس عادي
+        $product =$this->route('Product',0);     ////this route لانه بترجعلي قيمة الاوبجيكت نفسه مش الايدي (قيمةالانتجر )
         $id =$product ? $product->id : 0;
 
         return[
@@ -36,8 +36,10 @@ class ProductRequest extends FormRequest
                 'short_description' => 'nullable|string|max:500',
                 'price' => 'required|numeric|min:0',
                 'compare_price' => 'nullable|numeric|min:0|gt:price',
-                'image' => 'nullable|image|dimensions:min_width=400,min_height=300|max:1024',
+                'image' => 'nullable|image|max:2048|dimensions:max_width=350,max_height=600',
                 'status'=>'required|in:active,draft,archived',
+                'gallery'=>'nullable|array',
+                'gallery.*'=>'image',
 
             ];
     }

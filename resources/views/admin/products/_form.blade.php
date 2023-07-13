@@ -11,16 +11,20 @@
 <div class="row">
     <div class="col-md-8">
         <div class="form-floating mb-3">
-            <label for="name"> Product Name</label>
-            <input type="text" class="form-control" id="name" name="name" placeholder="Product name"
-                value="{{ old('name', $product->name) }}">
-        </div>
-        <div class="form-floating mb-3">
-            <label for="slug"> URL Slug</label>
-            <input type="text" class="form-control" id="slug" name="slug" placeholder="URL Slug"
-                value="{{ old('slug', $product->slug) }}">
+            <label for="name">Product Name</label>
+            <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" placeholder="Product name" value="{{ old('name', $product->name) }}">
+            @error('name')
+            <p class="invalid-feedback">{{ $message }}</p>
+            @enderror
         </div>
 
+        <div class="form-floating mb-3">
+            <label for="slug"> URL Slug</label>
+            <input type="text" class="form-control @error('slug') is-invalid @enderror" id="slug" name="slug" placeholder="URL Slug" value="{{ old('slug', $product->slug) }}">
+            @error('slug')
+            <p class="invalid-feedback">{{ $message }}</p>
+            @enderror
+        </div>
         <div class="form-floating mb-3">
             <label for="description"> Description</label>
             <textarea class="form-control" id="description" name="description" placeholder="Description">{{ old('description', $product->description) }}</textarea>
@@ -28,6 +32,21 @@
         <div class="form-floating mb-3">
             <label for="short_description"> Short Description</label>
             <textarea class="form-control" id="short_description" name="short_description" placeholder="Short description">{{ old('short_description', $product->short_description) }}</textarea>
+        </div>
+        <div class="mb-3">
+            <label for="gallery"> Product Image</label>
+            <div>
+                <input type="file" class="form-control" id="gallery" name="gallery[]"multiple placeholder="Product Gallery">
+            </div>
+            @if ($gallery ?? false){{--هاي معناها اذا مجاش الفريبل عتبره فولس---او  بتعرف الجلري في الكرييت وتعطيه قيمة فولس--}}
+                <div class="row">
+                    @foreach ( $gallery as $image) {{--هان الايميج بترجعل قيمة موديل وانا بدي اوصل لرابط الصورة فبنحلها اما بالاكسزورز او بال asset--}}
+                    <div class="col-md-3">
+                        <img src="{{$image->url}}" class="img-fluid  " alt="">
+                    </div>
+                    @endforeach
+                </div>
+            @endif
         </div>
     </div>
     <div class="col-md-4">
@@ -69,7 +88,8 @@
                 placeholder="Compare Price" value="{{ old('compare_price', $product->compare_price) }}">
         </div>
         <div class="form-floating mb-3">
-            <label for="image"> Product Image</label>
+            <label for="image"> Product Image</label><br>
+                <img src="{{$product->image_url}}" width="100" alt="">
             <input type="file" class="form-control" id="image" name="image" placeholder="Product Image">
         </div>
     </div>
