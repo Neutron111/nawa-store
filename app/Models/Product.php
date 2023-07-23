@@ -1,15 +1,16 @@
 <?php
 
 namespace App\Models;
-
+use Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
 use NumberFormatter;
 
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;            // softdelete
 
     const STATUS_ACTIVE ='active';
     const STATUS_ARCHIVED ='archived';
@@ -36,9 +37,11 @@ class Product extends Model
         }
         return 'https://placehold.co/80x80';
     }
-    public function getPriceFormattedAttribute()
+    public function getPriceFormattedAttribute()  /// Acsessors
     {
         $foramtter =new NumberFormatter('en',NumberFormatter::CURRENCY);
         return $foramtter->formatCurrency($this->price,'EUR');
     }
+
+
 }

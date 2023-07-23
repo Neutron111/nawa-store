@@ -1,10 +1,9 @@
 @extends('layouts.admin')
 @section('content')
 <header class="mb-4 d-flex">
-    <h2 class="mb-4 fs-3">{{$title}}</h2>
+    <h2 class="mb-4 fs-3">Trashed Products</h2>
     <div class="ml-auto">
-    <a href="{{ route('Products.create') }}" class="btn btn-sm btn-primary">+ Create Product</a>
-    <a href="{{ route('Products.trashed') }}" class="btn btn-sm btn-danger">View trashed<i class="fas fa-trash"></i></a>
+    <a href="{{ route('Products.index') }}" class="btn btn-sm btn-primary">Product List</a>
     </div>
 </header>
     @if (session()->has('success'))
@@ -16,12 +15,10 @@
     <table class="table">
         <thead>
             <tr>
-                <th>images</th>
+                <th></th>
                 <th>ID</th>
                 <th>Name</th>
-                <th>Category </th>
-                <th>Price</th>
-                <th>Status</th>
+                <th>Deleted At</th>
                 <th></th>
                 <th></th>
             </tr>
@@ -36,17 +33,20 @@
                     </td>
                     <td>{{ $product->id }}</td>
                     <td>{{ $product->name }}</td>
-                    <td>{{ $product->category_name }}</td>
-                    <td>{{ $product->price_formatted }}</td>
-                    <td>{{ $product->status }}</td>
-                    <td><a href="{{ route('Products.edit', $product->id) }}" class="btn btn-sm btn-outline-dark">Edit <i
-                                class="far fa-edit"></i></a></td>
+                    <td>{{ $product->deleted_at }}</td>
                     <td>
-                        <form action="{{ route('Products.destroy', $product->id) }}" method="POST">
+                            <form action="{{ route('Products.restore', $product->id) }}" method="POST">
+                                @csrf
+                                @method('PUT') <!-- Add this line to set the method to PUT -->
+                                <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-trash-restore"></i> Restore</button>
+                            </form>
+                    </td>
+                    <td>
+                        <form action="{{ route('Products.force-delete', $product->id) }}" method="POST">
                             @csrf
                             @method('delete')
                             <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i>
-                                Delete</button>
+                                Force Delete</button>
                         </form>
                     </td>
                 </tr>

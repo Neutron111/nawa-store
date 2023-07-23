@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProductsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +19,13 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+// // For index, create, store, show, edit, update, and destroy methods
+// For trashed, restore, and forceDelete methods
+Route::get('/admin/products/trashed', [\App\Http\Controllers\Admin\ProductController::class, 'trashed'])->name('Products.trashed');
+Route::put('/admin/products/{product}/restore', [\App\Http\Controllers\Admin\ProductController::class, 'restore'])->name('Products.restore');
+Route::delete('/admin/products/{product}/force', [\App\Http\Controllers\Admin\ProductController::class, 'forceDelete'])->name('Products.force-delete');
+
 
 Route::resource('/Admin/Products', ProductController::class); ///to build all routs to specific controller
 

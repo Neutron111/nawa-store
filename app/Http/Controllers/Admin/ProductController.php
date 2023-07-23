@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
-
 use App\Http\Requests\ProductRequest;
 use App\Models\Product;
 use App\Http\Controllers\Controller;
@@ -40,24 +39,20 @@ class ProductController extends Controller
         //     'products' => $products,
 
         // ]);
-        ///************* the seocend way  */
-        // $products =Product::join('categories','categories.id','=','products.category_id')
-        // ->select(
-        //     ['products.*',
-        //     'categories.name as category_name',]
-        // )
+        /************* the seocend way  */
+        $products = Product::leftJoin('categories', 'categories.id', '=', 'products.category_id')
+        ->select([
+            'products.*',
+            'categories.name as category_name'
+        ])
+        // ->get();// fetch all data
 
-        // ->get(); // to excute// return Collection object =array
-
-
-
-        $products = Product::all();
-        return view('admin.products.index', [
-            'title' => "Products list", // assositve array key,value
-            'products' => $products,
-        ]);
+        ->paginate(5); // تستتخدم لعرض عدد معين من المنتجات في الاندكس
+    return view('admin.products.index', [
+        'title' => 'Product List',
+        'products' => $products
+    ]);
     }
-
     /**
      * Show the form for creating a new resource.
      *
@@ -142,7 +137,7 @@ class ProductController extends Controller
         // } to make it secure from hacker if he tried some tricks number on domain parameter
         // dd($Product);
         $categories = Category::all();
-        $gallery =ProductImage::where('product_id','=',$Product->id)->get();// بدي الصور فقط الخاصة بالمنتج هاد 
+        $gallery =ProductImage::where('product_id','=',$Product->id)->get();// بدي الصور فقط الخاصة بالمنتج هاد
         return view('admin.products.edit', [
             'product' => $Product,
             'categories' => $categories,
@@ -218,11 +213,34 @@ class ProductController extends Controller
         // Product::destroy($id);                     /////seocend way
         //  $product = Product::findOrFail($id);          ///// thired way
         $Product->delete();
-        if ($Product->image) {
-            Storage::disk('public')->delete($Product->image);
-        }
+
         return redirect()
             ->route('Products.index') //Get
             ->with('success', "Product ({$Product->name}) Deleted"); //Add flash msg
+    }
+/**********************Soft Delete */
+    public function trashed(){
+        $products =Product::onlyTrashed()->paginate();
+        return view ('admin.Products.trashed',[
+            'products' =>$products
+        ]);
+    }
+    public function restore($id){
+        $product = Product::onlyTrashed()->findOrFail($id);
+        $product->restore();
+        return redirect()
+            ->route('Products.index') //Get
+            ->with('success', "Product ({$product->name}) restored");
+    }
+
+    public function forceDelete($id){
+        $product = Product::onlyTrashed()->findOrFail($id);
+        $product->forceDelete();
+        if ($product->image) {
+            Storage::disk('public')->delete($product->image);
+        }
+        return redirect()
+            ->route('Products.index') //Get
+            ->with('success', "Product ({$product->name}) Deleted forever");
     }
 }

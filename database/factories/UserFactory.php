@@ -14,7 +14,7 @@ class UserFactory extends Factory
      * Define the model's default state.
      *
      * @return array<string, mixed>
-     */
+     */           // عشان تشغل الفاكتوري لازم تروح على الداتا بيز سيدر وتفعل اول سطر معموله كومينت  \App\Models\User::factory(10)->create();
     public function definition()
     {
         return [

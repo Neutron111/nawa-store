@@ -15,13 +15,14 @@ class ProductSeeder extends Seeder
      */
     public function run()
     {
-        for ($i=1;$i<=10;$i++){
+        for ($i=13;$i<=20;$i++){
         DB::table('products')->insert(
             [
                 'name'=> 'Product'.$i,
                 'slug'=>'slug'.$i,
-                'created_at'=>now(),
-                
+                'price'=>''.$i,
+                'status'=>'draft',
+
             ]
             );
         }

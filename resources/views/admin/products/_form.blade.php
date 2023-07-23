@@ -10,30 +10,21 @@
 @endif
 <div class="row">
     <div class="col-md-8">
-        <div class="form-floating mb-3">
+        {{-- <div class="form-floating mb-3">
             <label for="name">Product Name</label>
             <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" placeholder="Product name" value="{{ old('name', $product->name) }}">
             @error('name')
             <p class="invalid-feedback">{{ $message }}</p>
             @enderror
-        </div>
+        </div> --}}
 
-        <div class="form-floating mb-3">
-            <label for="slug"> URL Slug</label>
-            <input type="text" class="form-control @error('slug') is-invalid @enderror" id="slug" name="slug" placeholder="URL Slug" value="{{ old('slug', $product->slug) }}">
-            @error('slug')
-            <p class="invalid-feedback">{{ $message }}</p>
-            @enderror
-        </div>
-        <div class="form-floating mb-3">
-            <label for="description"> Description</label>
-            <textarea class="form-control" id="description" name="description" placeholder="Description">{{ old('description', $product->description) }}</textarea>
-        </div>
-        <div class="form-floating mb-3">
-            <label for="short_description"> Short Description</label>
-            <textarea class="form-control" id="short_description" name="short_description" placeholder="Short description">{{ old('short_description', $product->short_description) }}</textarea>
-        </div>
-        <div class="mb-3">
+        <x-form.input label="Product Name" id="name" name="name" value="{{$product->name}}"/>
+        <x-form.input label="URL SLUG" id="slug" name="slug" value="{{$product->slug}}"/>
+        <x-form.textarea label="Description" id="description" name="description" placeholder="Description" value="{{$product->description}}"/>
+        <x-form.textarea label="Short_description" id="short_description" name="short_description" placeholder="Short description" value="{{$product->short_description}}"/>
+
+
+                <div class="mb-3">
             <label for="gallery"> Product Image</label>
             <div>
                 <input type="file" class="form-control" id="gallery" name="gallery[]"multiple placeholder="Product Gallery">
@@ -64,29 +55,14 @@
                 @endforeach
             </div>
         </div>
-        <div class=" mb-3">
-            <label for="category_id"> Category</label>
-            <div>
-                <select name="category_id" id="category_id" class="form-select form-control">
-                    <option value=""></option>
-                    @foreach ($categories as $category)
-                        <option @if ($category->id == old('category_id', $product->category_id)) selected @endif value="{{ $category->id }}">
-                            {{ $category->name }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-        </div>
-        <div class="form-floating mb-3">
-            <label for="price"> Product Price</label>
-            <input type="number" class="form-control" id="price" name="price" placeholder="Price"
-                value="{{ old('price', $product->price) }}">
-        </div>
-        <div class="form-floating mb-3">
-            <label for="compare_price"> Compare Price</label>
-            <input type="number" class="form-control" id="compare_price" name="compare_price"
-                placeholder="Compare Price" value="{{ old('compare_price', $product->compare_price) }}">
-        </div>
+
+        <x-form.select name="category_id" id="category_id" label="Category" :value="$product->category_id" :options="$categories->pluck('name', 'id')"/>
+            {{--هين بنفعش تستخدم قواس لانك بدكاش تتطبع بدك تمرر قيمة وعشان تمررها كمتغير نستخدم نقطتين :--}}
+            {{-- pluck  بترجعلي اري لعنصر من الاوبجيكت --}}
+
+        <x-form.input label="Price" id="price" name="price" value="{{$product->price}}"/>
+        <x-form.input label="Compare Price" id="compare_price" name="compare_price" value="{{$product->compare_price}}"/>
+
         <div class="form-floating mb-3">
             <label for="image"> Product Image</label><br>
                 <img src="{{$product->image_url}}" width="100" alt="">
