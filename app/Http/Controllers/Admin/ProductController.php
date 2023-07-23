@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
+
 use App\Http\Requests\ProductRequest;
 use App\Models\Product;
 use App\Http\Controllers\Controller;
@@ -41,17 +42,21 @@ class ProductController extends Controller
         // ]);
         /************* the seocend way  */
         $products = Product::leftJoin('categories', 'categories.id', '=', 'products.category_id')
-        ->select([
-            'products.*',
-            'categories.name as category_name'
-        ])
-        // ->get();// fetch all data
+            ->select([
+                'products.*',
+                'categories.name as category_name'
+            ])
+            // ->get();// fetch all data
+            // ->withoutGlobalScope('owner')    // تستخدم لايقاف الجلوبال سكوب لانه بشتغل تلقائي دائما مش زي اللوكال
+            // ->active()                        // لوكال سكوب معرفه بالموديل بشرط وبستدعيه هان
+            //->status('archived')               // لوكال سكوب بس معه بارميتر
 
-        ->paginate(5); // تستتخدم لعرض عدد معين من المنتجات في الاندكس
-    return view('admin.products.index', [
-        'title' => 'Product List',
-        'products' => $products
-    ]);
+
+            ->paginate(5); // تستتخدم لعرض عدد معين من المنتجات في الاندكس
+        return view('admin.products.index', [
+            'title' => 'Product List',
+            'products' => $products
+        ]);
     }
     /**
      * Show the form for creating a new resource.
@@ -137,12 +142,12 @@ class ProductController extends Controller
         // } to make it secure from hacker if he tried some tricks number on domain parameter
         // dd($Product);
         $categories = Category::all();
-        $gallery =ProductImage::where('product_id','=',$Product->id)->get();// بدي الصور فقط الخاصة بالمنتج هاد
+        $gallery = ProductImage::where('product_id', '=', $Product->id)->get(); // بدي الصور فقط الخاصة بالمنتج هاد
         return view('admin.products.edit', [
             'product' => $Product,
             'categories' => $categories,
             'status_options' => Product::getstatusoptions(),
-            'gallery'=> $gallery ,    // بعتناها هان عشان نفصل بينها وبين الكرييت
+            'gallery' => $gallery,    // بعتناها هان عشان نفصل بينها وبين الكرييت
         ]);
     }
 
@@ -168,18 +173,18 @@ class ProductController extends Controller
             $path = $file->store('uploads/images', 'public');
             $data['image'] = $path;
         }
-        $old_image =$Product->image;
+        $old_image = $Product->image;
         $Product->update($data);
 
-        if ($old_image && $old_image != $Product->image){
+        if ($old_image && $old_image != $Product->image) {
             Storage::disk('public')->delete($old_image);
         }
-        if($request->hasFile('gallery')) {
+        if ($request->hasFile('gallery')) {
             //array of UploadedFile
-            foreach($request->file('gallery') as $file){
+            foreach ($request->file('gallery') as $file) {
                 ProductImage::create([
-                    'product_id'=>$Product->id,
-                    'image' =>$file->store('uploads/images','public'),
+                    'product_id' => $Product->id,
+                    'image' => $file->store('uploads/images', 'public'),
                 ]);
             }
         }
@@ -218,14 +223,16 @@ class ProductController extends Controller
             ->route('Products.index') //Get
             ->with('success', "Product ({$Product->name}) Deleted"); //Add flash msg
     }
-/**********************Soft Delete */
-    public function trashed(){
-        $products =Product::onlyTrashed()->paginate();
-        return view ('admin.Products.trashed',[
-            'products' =>$products
+    /**********************Soft Delete */
+    public function trashed()
+    {
+        $products = Product::onlyTrashed()->paginate();
+        return view('admin.Products.trashed', [
+            'products' => $products
         ]);
     }
-    public function restore($id){
+    public function restore($id)
+    {
         $product = Product::onlyTrashed()->findOrFail($id);
         $product->restore();
         return redirect()
@@ -233,7 +240,8 @@ class ProductController extends Controller
             ->with('success', "Product ({$product->name}) restored");
     }
 
-    public function forceDelete($id){
+    public function forceDelete($id)
+    {
         $product = Product::onlyTrashed()->findOrFail($id);
         $product->forceDelete();
         if ($product->image) {

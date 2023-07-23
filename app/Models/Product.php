@@ -2,6 +2,7 @@
 
 namespace App\Models;
 use Attribute;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -20,6 +21,22 @@ class Product extends Model
         'name','slug','category_id','description','short_description',
         'price','compare_price','image','status'
     ];
+
+    protected static function booted()    // Global Scope
+    {
+        static::addGlobalScope('owner',function( Builder $query){   // owner the name of scope
+            $query->where('user_id','=',1);
+        });
+    }
+    public function scopeActive(Builder $query){   // Local Scope
+        $query->where('status','=','active');
+
+    }
+    public function scopeٍStatus(Builder $query ,$status){   // Local Scope with parameter
+        $query->where('status','=',$status);
+
+    }
+
 
     public static function getstatusoptions(){
         return[
