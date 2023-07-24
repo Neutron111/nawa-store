@@ -47,7 +47,7 @@ class ProductController extends Controller
                 'categories.name as category_name'
             ])
             // ->get();// fetch all data
-            // ->withoutGlobalScope('owner')    // تستخدم لايقاف الجلوبال سكوب لانه بشتغل تلقائي دائما مش زي اللوكال
+             ->withoutGlobalScope('owner')    // تستخدم لايقاف الجلوبال سكوب لانه بشتغل تلقائي دائما مش زي اللوكال
             // ->active()                        // لوكال سكوب معرفه بالموديل بشرط وبستدعيه هان
             //->status('archived')               // لوكال سكوب بس معه بارميتر
 
