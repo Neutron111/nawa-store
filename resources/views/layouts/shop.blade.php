@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>{{$title}}</title>
+    <title>{{$title}} | {{config('app.name')}}</title>
     <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/images/favicon.svg') }}" />
@@ -342,6 +342,7 @@
     <!-- End Header Area -->
 
     <!-- Start Breadcrumbs -->
+    @if ($showBreadcumb)
     <div class="breadcrumbs">
         <div class="container">
             <div class="row align-items-center">
@@ -352,13 +353,15 @@
                 </div>
                 <div class="col-lg-6 col-md-6 col-12">
                     <ul class="breadcrumb-nav">
-                        <li><a href="index.html"><i class="lni lni-home"></i> Home</a></li>
+                        <li><a href="{{ route('home') }}"><i class="lni lni-home"></i> Home</a></li>
                         <li>About Us</li>
                     </ul>
                 </div>
             </div>
         </div>
     </div>
+    @endif
+
     <!-- End Breadcrumbs -->
 {{-- **************************************************************************************************************************** --}}
 

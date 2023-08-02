@@ -59,6 +59,9 @@ class Product extends Model
         $foramtter =new NumberFormatter('en',NumberFormatter::CURRENCY);
         return $foramtter->formatCurrency($this->price,'EUR');
     }
-
-
+    public function getcomparePriceFormattedAttribute()  /// Acsessors
+    {
+        $foramtter =new NumberFormatter('en',NumberFormatter::CURRENCY);
+        return $foramtter->formatCurrency($this->compare_price,'EUR');
+    }
 }

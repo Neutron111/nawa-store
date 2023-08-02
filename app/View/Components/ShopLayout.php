@@ -7,14 +7,16 @@ use Illuminate\View\Component;
 class ShopLayout extends Component
 {
     public $title;
+    public $showBreadcumb;
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct($title)
+    public function __construct($title ,$showBreadcumb =true)
     {
-        //
+        $this->title =$title;
+        $this->showBreadcumb = $showBreadcumb;
     }
 
     /**
