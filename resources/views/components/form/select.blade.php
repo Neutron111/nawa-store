@@ -11,6 +11,6 @@
                 </option>
             @endforeach
         </select>
-        <x-form.error name="{{ $name }}"/>
+        <x-form.error name="{{ $name }}" />
     </div>
 </div>

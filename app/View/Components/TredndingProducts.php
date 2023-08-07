@@ -19,7 +19,8 @@ class TredndingProducts extends Component
     {
     $this->title =$title;
     $this->products = Product::withoutGlobalScope('owner')
-
+        ->with('category') // Eager load
+        //تستخدم للتخفيف الطلبات  على الداتا بيز مثلا هان في عندي عرض لارع منتجات راح اطلب من الدات بيز 5 مرات استعلام بس بالايجر بتطلب مرتين وحدة للتخزين ووحدة عرض 
         ->active()
         ->latest('updated_at')
         ->take($count) //limit(8)

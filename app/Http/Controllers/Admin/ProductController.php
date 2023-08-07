@@ -10,6 +10,7 @@ use App\Models\ProductImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\View;
 use PhpParser\Node\Expr\Cast\String_;
 
 class ProductController extends Controller
@@ -18,7 +19,25 @@ class ProductController extends Controller
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
+     *
+     *
+     *
+     *
      */
+
+    public function __construct(Request $request)
+    {
+        if ($request->method() == 'GET') {
+            $categories = Category::all(); // collection (array)
+            View::share([
+                // any file view can use this variable
+                'categories' => $categories,
+
+
+            ]);
+        }
+    }
+
     public function index()
     {
 
@@ -47,7 +66,7 @@ class ProductController extends Controller
                 'categories.name as category_name'
             ])
             // ->get();// fetch all data
-             ->withoutGlobalScope('owner')    // تستخدم لايقاف الجلوبال سكوب لانه بشتغل تلقائي دائما مش زي اللوكال
+            ->withoutGlobalScope('owner')    // تستخدم لايقاف الجلوبال سكوب لانه بشتغل تلقائي دائما مش زي اللوكال
             // ->active()                        // لوكال سكوب معرفه بالموديل بشرط وبستدعيه هان
             //->status('archived')               // لوكال سكوب بس معه بارميتر
 
@@ -141,11 +160,9 @@ class ProductController extends Controller
         //     abort(404);
         // } to make it secure from hacker if he tried some tricks number on domain parameter
         // dd($Product);
-        $categories = Category::all();
         $gallery = ProductImage::where('product_id', '=', $Product->id)->get(); // بدي الصور فقط الخاصة بالمنتج هاد
         return view('admin.products.edit', [
             'product' => $Product,
-            'categories' => $categories,
             'status_options' => Product::getstatusoptions(),
             'gallery' => $gallery,    // بعتناها هان عشان نفصل بينها وبين الكرييت
         ]);

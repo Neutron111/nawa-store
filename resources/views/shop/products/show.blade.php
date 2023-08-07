@@ -24,8 +24,7 @@
                     <div class="col-lg-6 col-md-12 col-12">
                         <div class="product-info">
                             <h2 class="title">{{ $product->name }}</h2>
-                            <p class="category"><i class="lni lni-tag"></i> Drones:<a href="javascript:void(0)">Action
-                                    cameras</a></p>
+                            <p class="category"><i class="lni lni-tag"></i><a href="javascript:void(0)">{{$product->category->name}}</a></p>
                             <h3 class="price">{{ $product->price_formatted }}
                                 @if ($product->compare_price)
                                     <span>{{ $product->compare_price_formatted }}</span>
@@ -249,6 +248,20 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+            <div>
+                <h2>Similar Products</h2>
+                <div class="row">
+                    @if ($product && $product->category)
+                    
+                        @foreach ($product->category->products as $similar_product)
+                            <div class="col-lg-3 col-md-6 col-12">
+                                <x-product-card :product="$similar_product" />
+                            </div>
+                        @endforeach
+                    @else <div>nothing</div>
+                    @endif
                 </div>
             </div>
         </div>

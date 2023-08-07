@@ -22,6 +22,12 @@ class Product extends Model
         'price','compare_price','image','status'
     ];
 
+    public function category(){
+        return $this->belongsTo(Category::class)->withDefault([
+            'name'=>'Category 2',   //ديفولت  لانه هيضرب ايرور بروبرتي نل اذا كان فاضية من الاصل
+        ]);
+    }
+
     protected static function booted()    // Global Scope
     {
         static::addGlobalScope('owner',function( Builder $query){   // owner the name of scope

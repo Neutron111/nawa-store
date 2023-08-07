@@ -43,7 +43,7 @@
         <!-- Start Topbar -->
         <div class="topbar">
             <div class="container">
-                <div class="row align-items-center">
+                <div class="row align-items-center ">
                     <div class="col-lg-4 col-md-4 col-12">
                         <div class="top-left">
                             <ul class="menu-top-link">
@@ -86,18 +86,37 @@
                     </div>
                     <div class="col-lg-4 col-md-4 col-12">
                         <div class="top-end">
-                            <div class="user">
-                                <i class="lni lni-user"></i>
-                                Hello
-                            </div>
-                            <ul class="user-login">
-                                <li>
-                                    <a href="login.html">Sign In</a>
-                                </li>
-                                <li>
-                                    <a href="register.html">Register</a>
-                                </li>
-                            </ul>
+                            @if (!Auth::check())
+                                <div class="user">
+                                    <i class="lni lni-user"></i>
+                                    Hello
+                                </div>
+                                <ul class="user-login">
+                                    <li>
+                                        <a href="{{ route('login') }}">Sign In</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('register') }}">Register</a>
+                                    </li>
+                                </ul>
+                            @else
+                                <div class="user">
+                                    <i class="lni lni-user"></i>
+                                    {{ Auth::user()->profile->first_name }}
+                                </div>
+                                <ul class="user-login">
+                                    <li>
+                                        <a href="{{ route('profile.edit') }}">Profile</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+                                    </li>
+                                </ul>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                    @csrf
+                                </form>
+
+                            @endif
                         </div>
                     </div>
                 </div>

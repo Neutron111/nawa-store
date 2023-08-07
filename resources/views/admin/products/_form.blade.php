@@ -56,7 +56,7 @@
             </div>
         </div>
 
-        <x-form.select name="category_id" id="category_id" label="Category" :value="$product->category_id" :options="$categories->pluck('name', 'id')"/>
+        <x-form.select name="category_id" id="category_id" label="Category" :value="$product->category_id" :options="$categories" />
             {{--هين بنفعش تستخدم قواس لانك بدكاش تتطبع بدك تمرر قيمة وعشان تمررها كمتغير نستخدم نقطتين :--}}
             {{-- pluck  بترجعلي اري لعنصر من الاوبجيكت --}}
 
