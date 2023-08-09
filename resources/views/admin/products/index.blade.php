@@ -13,6 +13,22 @@
         </div>
     @endif
 
+    <form action="{{URL::CURRENT()}}"method="get" class="form-inline">
+        <input type="text"name="search" value="{{request('search')}}" class="form-control mb-2 mr-2" placeholder ="Search...">
+        <select name="status" class="form-control mb-2 mr-2">
+            <option value="">Status</option>
+            <option value="active" @selected(request('status')=='active')>Active</option>
+            <option value="draft"@selected(request('status')=='draft')>Draft</option>
+            <option value="archived"@selected(request('status')=='archived')>Archived</option>
+        </select>
+        <input type="number"name="price-min" value="{{request('price_min')}}" class="form-control mb-2 mr-2" placeholder ="price-min...">
+        <input type="number"name="price-max" value="{{request('price_max')}}" class="form-control mb-2 mr-2" placeholder ="price-max...">
+
+        <button type='submit' class="btn btn-dark">Filter</button>
+    </form>
+
+
+
     <table class="table">
         <thead>
             <tr>

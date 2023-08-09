@@ -38,7 +38,7 @@ class ProductController extends Controller
         }
     }
 
-    public function index()
+    public function index(Request $request)
     {
 
         //SELECT  products.*, categories.name as category_name
@@ -68,8 +68,10 @@ class ProductController extends Controller
             // ->get();// fetch all data
             ->withoutGlobalScope('owner')    // تستخدم لايقاف الجلوبال سكوب لانه بشتغل تلقائي دائما مش زي اللوكال
             // ->active()                        // لوكال سكوب معرفه بالموديل بشرط وبستدعيه هان
-            //->status('archived')               // لوكال سكوب بس معه بارميتر
+            //->status('archived')// لوكال سكوب بس معه بارميتر
 
+            //search filtring data with localscope
+            ->filter($request)
 
             ->paginate(5); // تستتخدم لعرض عدد معين من المنتجات في الاندكس
         return view('admin.products.index', [

@@ -43,6 +43,30 @@ class User extends Authenticatable
     ];
 
     public function profile(){
-        return $this->hasOne(Profile::class)->withDefault();
+        return $this->hasOne(Profile::class)->withDefault([
+            'first_name' =>'No name',
+            ]);
+    }
+
+    public function products(){
+        return $this->hasMany(Product::class);
+    }
+
+    //User has many products in the cart
+             //علاقة متعدد لمتعدد وجدول الوسيط كارت ;
+
+
+    public function cart(){
+        return $this->belongsToMany(
+            Product::class,    //Related model (Product)
+             'carts',          //Pivot table (default=product_user)
+             'user_id',        //FK current model in pivot table
+             'product_id',     //Fk realted model in pivot table
+             'id',             //Pk current model
+             'id'              //Pk related model
+            )
+            ->whitPivot(['quantity'])
+            ->withTimestamps()
+            ->using(Cart::class);
     }
 }
